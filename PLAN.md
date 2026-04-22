@@ -259,13 +259,13 @@ UI: `rejected` → amber banner with reason, textarea preserved, no navigation. 
 
 **Tasks:**
 - `src/lib/supabase/{server,client,middleware}.ts` per `@supabase/ssr` docs.
-- `src/middleware.ts` refreshes cookies and redirects unauthenticated requests on everything except `/login`, `/signup`, `/auth/*`, static assets.
+- `src/proxy.ts` (Next.js 16 naming; was `middleware.ts`) refreshes cookies and redirects unauthenticated requests on everything except `/login`, `/signup`, `/auth/*`, static assets.
 - `src/app/(auth)/login/page.tsx` + `signup/page.tsx` — client forms calling server actions in `src/app/(auth)/actions.ts`.
 - Signup server action: if `supabase.auth.signUp` returns an error, surface the message (`error.message`) to the UI — not a silent "check your email" success. Belt-and-suspenders in case email confirmation ever gets re-enabled.
 - Sign-out server action wired to a button in the shared nav.
 - Route groups: `(auth)` unauthenticated; `(app)` protected with a layout that reads the user and passes email to the nav.
 
-**Files:** `src/middleware.ts`, `src/lib/supabase/{server,client,middleware}.ts`, `src/app/(auth)/{login,signup}/page.tsx`, `src/app/(auth)/actions.ts`, `src/app/(app)/layout.tsx`, `src/components/nav.tsx`.
+**Files:** `src/proxy.ts`, `src/lib/supabase/{server,client,middleware}.ts`, `src/app/(auth)/{login,signup}/page.tsx`, `src/app/(auth)/actions.ts`, `src/app/(app)/layout.tsx`, `src/components/nav.tsx`.
 
 **Acceptance:** on the deployed URL, signup creates a user with no email step, login works, refresh keeps you logged in, visiting `/` while logged out redirects to `/login`, visiting `/login` while logged in redirects to `/`. A deliberate bad signup (e.g. weak password) shows the real error text.
 
@@ -446,7 +446,7 @@ End-to-end checks run manually against the **deployed** URL (localhost is insuff
 
 - Schema + view + RLS: applied via Supabase SQL editor (not in repo).
 - Supabase clients: `src/lib/supabase/{server,client,middleware}.ts`
-- Auth middleware: `src/middleware.ts`
+- Auth middleware (Next.js 16 proxy convention): `src/proxy.ts`
 - Auth actions: `src/app/(auth)/actions.ts`
 - AI client + prompt + tools: `src/lib/ai/{anthropic,prompt,tools}.ts`
 - Zod schemas: `src/lib/schemas.ts`

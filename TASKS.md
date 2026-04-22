@@ -12,11 +12,11 @@ Derived from `PLAN.md`. Tick as completed. Workshop minimum: 8 tasks; ≥6 compl
 
 ## Phase 2 — Supabase + schema
 
-- [ ] Create the Supabase project and capture URL + anon key into `.env.local` and Vercel
-- [ ] Paste the full schema SQL (tables + indexes + RLS policies + trigger + `meetings_with_stats` view with `security_invoker = true`) into the Supabase SQL editor and verify zero errors
-- [ ] Disable email confirmation in Supabase Dashboard → Authentication → Providers → Email
-- [ ] Generate TypeScript types via `supabase gen types typescript` into `src/lib/database.types.ts`
-- [ ] Verify RLS isolation by inserting a meeting as user A and confirming a simulated user-B query returns zero rows
+- [x] Create the Supabase project and capture URL + anon key into `.env.local` and Vercel
+- [x] Paste the full schema SQL (tables + indexes + RLS policies + trigger + `meetings_with_stats` view with `security_invoker = true`) into the Supabase SQL editor and verify zero errors
+- [x] Disable email confirmation in Supabase Dashboard → Authentication → Providers → Email
+- [x] Generate TypeScript types via `supabase gen types typescript` into `src/lib/database.types.ts`
+- [ ] Verify RLS isolation by inserting a meeting as user A and confirming a simulated user-B query returns zero rows *(deferred until Phase 3 auth lets us sign up real users)*
 
 ## Phase 3 — Auth
 

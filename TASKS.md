@@ -4,9 +4,10 @@ Derived from `PLAN.md`. Tick as completed. Workshop minimum: 8 tasks; ≥6 compl
 
 ## Phase 1 — Scaffold + deploy
 
-- [ ] Run `pnpm create next-app@latest` with TS + Tailwind + ESLint + App Router + src dir, and verify `pnpm dev` boots the placeholder
-- [ ] Run `pnpm dlx shadcn@latest init` and add components: `button input textarea card checkbox dialog sonner skeleton label badge accordion`
-- [ ] Install runtime deps (`@supabase/ssr @supabase/supabase-js @anthropic-ai/sdk zod`), wire Prettier + Tailwind plugin, add `format` and `lint` scripts
+- [x] Run `pnpm create next-app@latest` with TS + Tailwind + ESLint + App Router + src dir, and verify `pnpm dev` boots the placeholder *(verified via `pnpm build` instead of `dev`, per session instructions)*
+- [x] Run `pnpm dlx shadcn@latest init` and add components: `button input textarea card checkbox dialog sonner skeleton label badge accordion`
+- [x] Install runtime deps (`@supabase/ssr @supabase/supabase-js @anthropic-ai/sdk zod`)
+- [x] Wire Prettier + `prettier-plugin-tailwindcss`, add `format` and `lint` scripts
 - [ ] Push to GitHub, import into Vercel, configure env var placeholders, and verify the first auto-deploy returns 200 on the public URL
 
 ## Phase 2 — Supabase + schema

@@ -7,7 +7,7 @@
 
 Meeting Debrief is a 4-hour workshop homework: a personal meeting-intelligence tool. The user pastes a transcript, an AI extracts structured output (title, summary, decisions, action items, blockers, follow-up email, participants), and the result is saved to a per-user searchable history with tickable action items and a cross-meeting dashboard of open work.
 
-Stack is fixed: Next.js 15 App Router + TypeScript + Tailwind + shadcn/ui + Supabase (Auth + Postgres + RLS) via `@supabase/ssr` + Anthropic SDK. Vercel for deploy, GitHub for source, pnpm for deps.
+Stack is fixed: Next.js 16 App Router + TypeScript + Tailwind + shadcn/ui + Supabase (Auth + Postgres + RLS) via `@supabase/ssr` + Anthropic SDK. Vercel for deploy, GitHub for source, pnpm for deps.
 
 This plan encodes the build order, the database schema, the AI prompting strategy, and the client/server split, with per-phase acceptance criteria and time estimates calibrated to the 4-hour budget.
 

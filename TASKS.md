@@ -20,8 +20,8 @@ Derived from `PLAN.md`. Tick as completed. Workshop minimum: 8 tasks; ≥6 compl
 
 ## Phase 3 — Auth
 
-- [ ] Wire `@supabase/ssr` server/client/middleware modules and add `src/middleware.ts` that refreshes cookies and redirects unauthenticated requests
-- [ ] Build `/login` and `/signup` pages with server actions; surface `supabase.auth.signUp` errors directly (no silent "check your email")
+- [x] Wire `@supabase/ssr` server/client/middleware modules and add `src/proxy.ts` that refreshes cookies and redirects unauthenticated requests
+- [x] Build `/login` and `/signup` pages with server actions; surface `supabase.auth.signUp` errors directly (no silent "check your email")
 - [ ] Verify on the deployed URL: signup → auto sign-in → refresh → sign out → redirected to `/login`
 
 ## Phase 4 — Debrief flow

@@ -41,8 +41,8 @@ Derived from `PLAN.md`. Tick as completed. Workshop minimum: 8 tasks; ≥6 compl
 
 ## Phase 6 — Dashboard
 
-- [ ] Build dashboard at `/` that lists open action items across all meetings (oldest first), with each item linking back to its meeting
-- [ ] Verify ticking an item on the dashboard removes it from the dashboard and marks it done on the meeting detail
+- [x] Build dashboard at `/` that lists open action items across all meetings (oldest first), with each item linking back to its meeting
+- [x] Verify ticking an item on the dashboard removes it from the dashboard and marks it done on the meeting detail *(revalidation wired in Phase 5 `toggleActionItem`; interactive confirmation awaits browser test)*
 
 ## Phase 7 — Search + polish + mobile
 

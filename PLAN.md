@@ -51,6 +51,17 @@ The plan reflects the user's review revisions: (1) raw transcript surfaced on th
 
 ## Design decisions
 
+### Implementation notes (added during Phase 4A)
+
+- **Test scripts**: Node 24's ESM resolver doesn't auto-try `.ts` extensions 
+  on extensionless imports. Node scripts must be run via `pnpm dlx tsx 
+  --env-file=.env.local scripts/<name>.ts`, not `node --experimental-strip-
+  types`.
+- **Module boundaries**: Files under `src/lib/ai/` use relative imports 
+  (`../schemas`) rather than `@/` aliases, so they remain runnable from 
+  plain-node scripts without a path-alias resolver. Do not auto-refactor 
+  these to alias imports.
+  
 ### Database schema
 
 Two tables + one view. `user_id` is denormalized onto `action_items` so the dashboard query is a single indexed scan and RLS stays a simple `auth.uid() = user_id` check with no joins.

@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { EmptyState } from "@/components/empty-state";
-import { SearchInput } from "@/components/search-input";
+import { MeetingsListShell } from "@/components/meetings-list-shell";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/server";
@@ -64,48 +64,48 @@ export default async function MeetingsListPage({ searchParams }: PageProps) {
         </Link>
       </div>
 
-      <div className="mt-6">
-        <SearchInput defaultValue={query} />
-      </div>
-
-      {rows.length === 0 ? (
-        query ? (
-          <EmptyState
-            title="No meetings match your search."
-            subtitle={`No results for "${query}". Try different keywords.`}
-          />
+      <MeetingsListShell query={query}>
+        {rows.length === 0 ? (
+          query ? (
+            <EmptyState
+              title="No meetings match your search."
+              subtitle={`No results for "${query}". Try different keywords.`}
+            />
+          ) : (
+            <EmptyState
+              title="No meetings yet"
+              subtitle="Paste your first transcript to get started."
+              cta={{ href: "/meetings/new", label: "New debrief" }}
+            />
+          )
         ) : (
-          <EmptyState
-            title="No meetings yet"
-            subtitle="Paste your first transcript to get started."
-            cta={{ href: "/meetings/new", label: "New debrief" }}
-          />
-        )
-      ) : (
-        <ul className="mt-6 flex flex-col gap-3">
-          {rows.map((m) => (
-            <li key={m.id ?? ""}>
-              <Link
-                href={`/meetings/${m.id}`}
-                className="hover:bg-muted/50 block rounded-xl border p-4 transition-colors"
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div className="min-w-0 flex-1">
-                    <h2 className="font-medium">{m.title}</h2>
-                    <p className="text-muted-foreground mt-1 text-xs">
-                      {m.meeting_date ? formatMeetingDate(m.meeting_date) : ""}
-                    </p>
-                    {m.summary ? <p className="mt-2 text-sm">{truncate(m.summary, 140)}</p> : null}
+          <ul className="flex flex-col gap-3">
+            {rows.map((m) => (
+              <li key={m.id ?? ""}>
+                <Link
+                  href={`/meetings/${m.id}`}
+                  className="hover:bg-muted/50 block rounded-xl border p-4 transition-colors"
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="min-w-0 flex-1">
+                      <h2 className="font-medium">{m.title}</h2>
+                      <p className="text-muted-foreground mt-1 text-xs">
+                        {m.meeting_date ? formatMeetingDate(m.meeting_date) : ""}
+                      </p>
+                      {m.summary ? (
+                        <p className="mt-2 text-sm">{truncate(m.summary, 140)}</p>
+                      ) : null}
+                    </div>
+                    <Badge variant={(m.open_count ?? 0) > 0 ? "default" : "secondary"}>
+                      {m.open_count ?? 0} of {m.total_count ?? 0} open
+                    </Badge>
                   </div>
-                  <Badge variant={(m.open_count ?? 0) > 0 ? "default" : "secondary"}>
-                    {m.open_count ?? 0} of {m.total_count ?? 0} open
-                  </Badge>
-                </div>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+      </MeetingsListShell>
     </div>
   );
 }

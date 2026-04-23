@@ -8,11 +8,23 @@ import { cn } from "@/lib/utils";
 
 const DEBOUNCE_MS = 300;
 
-export function SearchInput({ defaultValue = "" }: { defaultValue?: string }) {
+export function SearchInput({
+  defaultValue = "",
+  onPendingChange,
+}: {
+  defaultValue?: string;
+  onPendingChange?: (pending: boolean) => void;
+}) {
   const router = useRouter();
   const [value, setValue] = useState(defaultValue);
   const [isPending, startTransition] = useTransition();
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Propagate the transition's pending state to any parent that wants to
+  // dim or otherwise reflect that a new result set is on the way.
+  useEffect(() => {
+    onPendingChange?.(isPending);
+  }, [isPending, onPendingChange]);
 
   // Clean up any pending debounce on unmount.
   useEffect(() => {

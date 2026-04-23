@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { generateDebrief, saveMeeting } from "./actions";
@@ -11,8 +11,16 @@ import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import type { ActionItemDraft, MeetingDraft } from "@/lib/schemas";
+import { cn } from "@/lib/utils";
 
 const MIN_LENGTH = 40;
+
+const LOADING_MESSAGES = [
+  "Reading the transcript",
+  "Extracting decisions and action items",
+  "Drafting the follow-up email",
+  "Almost there",
+];
 
 type Mode = "input" | "loading" | "review" | "saving";
 type Banner = { kind: "rejected"; reason: string } | { kind: "error"; message: string };
@@ -24,6 +32,22 @@ export function NewMeetingForm() {
   const [draft, setDraft] = useState<MeetingDraft | null>(null);
   const [participantsText, setParticipantsText] = useState("");
   const [banner, setBanner] = useState<Banner | null>(null);
+  const [elapsed, setElapsed] = useState(0);
+
+  // Tick an elapsed-seconds counter while the AI call is in flight.
+  // Reset happens imperatively at mode transitions (not here) to keep
+  // this effect free of synchronous setState at the body level.
+  useEffect(() => {
+    if (mode !== "loading") return;
+    const start = Date.now();
+    const interval = setInterval(() => {
+      setElapsed(Math.floor((Date.now() - start) / 1000));
+    }, 250);
+    return () => clearInterval(interval);
+  }, [mode]);
+
+  const loadingMessage =
+    LOADING_MESSAGES[Math.min(Math.floor(elapsed / 4), LOADING_MESSAGES.length - 1)];
 
   async function handleDebrief() {
     setBanner(null);
@@ -34,6 +58,7 @@ export function NewMeetingForm() {
       });
       return;
     }
+    setElapsed(0);
     setMode("loading");
     try {
       const result = await generateDebrief(transcript);
@@ -83,6 +108,7 @@ export function NewMeetingForm() {
     setDraft(null);
     setParticipantsText("");
     setBanner(null);
+    setElapsed(0);
     setMode("input");
   }
 
@@ -105,31 +131,29 @@ export function NewMeetingForm() {
     );
   }
 
+  const isLoading = mode === "loading";
+
   return (
     <div className="flex flex-col gap-4">
       {banner ? <BannerView banner={banner} /> : null}
-      {mode === "loading" ? (
-        <LoadingSkeleton />
-      ) : (
-        <>
-          <Label htmlFor="transcript" className="sr-only">
-            Transcript
-          </Label>
-          <Textarea
-            id="transcript"
-            rows={12}
-            placeholder="Paste your meeting transcript or rough notes here…"
-            value={transcript}
-            onChange={(e) => setTranscript(e.target.value)}
-            className="min-h-64"
-          />
-          <div className="flex justify-end">
-            <Button onClick={handleDebrief} disabled={transcript.length === 0 || mode !== "input"}>
-              Debrief
-            </Button>
-          </div>
-        </>
-      )}
+      <Label htmlFor="transcript" className="sr-only">
+        Transcript
+      </Label>
+      <Textarea
+        id="transcript"
+        rows={12}
+        placeholder="Paste your meeting transcript or rough notes here…"
+        value={transcript}
+        onChange={(e) => setTranscript(e.target.value)}
+        disabled={isLoading}
+        className={cn("min-h-64 transition-opacity", isLoading && "opacity-50")}
+      />
+      <div className="flex justify-end">
+        <Button onClick={handleDebrief} disabled={transcript.length === 0 || mode !== "input"}>
+          {isLoading ? "Debriefing…" : "Debrief"}
+        </Button>
+      </div>
+      {isLoading ? <LoadingSkeleton message={loadingMessage} elapsed={elapsed} /> : null}
     </div>
   );
 }
@@ -150,35 +174,44 @@ function BannerView({ banner }: { banner: Banner }) {
   );
 }
 
-function LoadingSkeleton() {
+function LoadingSkeleton({ message, elapsed }: { message: string; elapsed: number }) {
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-2">
-        <Skeleton className="h-8 w-2/3" />
-        <Skeleton className="h-4 w-32" />
+    <div className="flex flex-col gap-4 rounded-md border p-4">
+      <div className="flex items-center justify-between">
+        <p className="text-muted-foreground text-sm">
+          <span className="mr-1 inline-block animate-pulse">●</span>
+          {message}…
+        </p>
+        <p className="text-muted-foreground text-xs tabular-nums">{elapsed}s</p>
       </div>
-      <div className="flex flex-col gap-2">
-        <Skeleton className="h-5 w-24" />
-        <Skeleton className="h-4 w-full" />
-        <Skeleton className="h-4 w-full" />
-        <Skeleton className="h-4 w-2/3" />
-      </div>
-      <div className="flex flex-col gap-2">
-        <Skeleton className="h-5 w-24" />
-        <Skeleton className="h-4 w-5/6" />
-        <Skeleton className="h-4 w-4/6" />
-        <Skeleton className="h-4 w-5/6" />
-      </div>
-      <div className="flex flex-col gap-2">
-        <Skeleton className="h-5 w-28" />
-        <Skeleton className="h-4 w-full" />
-        <Skeleton className="h-4 w-full" />
-        <Skeleton className="h-4 w-4/5" />
-        <Skeleton className="h-4 w-3/5" />
-      </div>
-      <div className="flex flex-col gap-2">
-        <Skeleton className="h-5 w-32" />
-        <Skeleton className="h-24 w-full" />
+      <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-2">
+          <Skeleton className="h-8 w-2/3" />
+          <Skeleton className="h-4 w-32" />
+        </div>
+        <div className="flex flex-col gap-2">
+          <Skeleton className="h-5 w-24" />
+          <Skeleton className="h-4 w-full" />
+          <Skeleton className="h-4 w-full" />
+          <Skeleton className="h-4 w-2/3" />
+        </div>
+        <div className="flex flex-col gap-2">
+          <Skeleton className="h-5 w-24" />
+          <Skeleton className="h-4 w-5/6" />
+          <Skeleton className="h-4 w-4/6" />
+          <Skeleton className="h-4 w-5/6" />
+        </div>
+        <div className="flex flex-col gap-2">
+          <Skeleton className="h-5 w-28" />
+          <Skeleton className="h-4 w-full" />
+          <Skeleton className="h-4 w-full" />
+          <Skeleton className="h-4 w-4/5" />
+          <Skeleton className="h-4 w-3/5" />
+        </div>
+        <div className="flex flex-col gap-2">
+          <Skeleton className="h-5 w-32" />
+          <Skeleton className="h-24 w-full" />
+        </div>
       </div>
     </div>
   );

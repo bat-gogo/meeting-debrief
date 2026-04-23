@@ -327,7 +327,7 @@ UI: `rejected` → amber banner with reason, textarea preserved, no navigation. 
 - `src/components/add-action-item.tsx` (client): inline input + button, calls `addActionItem(meetingId, content)`, revalidates.
 - `src/components/copy-email-button.tsx` (client): `navigator.clipboard.writeText`, sonner "Copied" toast.
 - `src/components/delete-meeting-dialog.tsx` (client): shadcn Dialog confirming delete; calls `deleteMeeting(id)`, `router.push('/meetings')`.
-- `src/components/transcript-disclosure.tsx` (client): thin wrapper around shadcn Accordion, collapsed by default, label "Original transcript".
+- Transcript disclosure: inlined directly in the detail page as a shadcn `Accordion` (`multiple={false}`, collapsed by default) — not a separate component.
 
 **Files:** all of the above, plus `src/app/(app)/meetings/[id]/actions.ts`, `src/app/(app)/meetings/actions.ts`.
 
@@ -462,7 +462,16 @@ End-to-end checks run manually against the **deployed** URL (localhost is insuff
 - AI client + prompt + tools: `src/lib/ai/{anthropic,prompt,tools}.ts`
 - Zod schemas: `src/lib/schemas.ts`
 - Debrief flow: `src/app/(app)/meetings/new/{page.tsx,new-meeting-form.tsx,actions.ts}`
-- Detail page + transcript disclosure: `src/app/(app)/meetings/[id]/page.tsx`, `src/components/transcript-disclosure.tsx`
+- Detail page (transcript disclosure inlined via `Accordion`): `src/app/(app)/meetings/[id]/page.tsx`
 - Action-item row (reused on detail + dashboard): `src/components/action-item-row.tsx`
 - Dashboard: `src/app/(app)/page.tsx`
 - Error boundary: `src/app/error.tsx`
+
+---
+
+## Changelog
+
+Schema migrations applied via Supabase MCP after the initial schema landed. Each migration is idempotent and recorded in Supabase's `supabase_migrations.schema_migrations` table.
+
+- **`fix_rls_initplan_and_function_search_path`** (Phase 2 advisor fixes) — rewrote the two RLS policies to use `(select auth.uid())` instead of `auth.uid()` so Postgres evaluates the call once per query (initplan) instead of per row; pinned `search_path = public` on the `set_action_item_completed_at()` trigger function to close the `mutable_search_path` advisor warning.
+- **`add_fts_column_for_websearch_tsquery`** (Phase 7 tsvector column) — added `meetings.fts` as a `tsvector GENERATED ALWAYS AS ... STORED` over `title ‖ summary ‖ raw_transcript`; swapped the old expression-based `meetings_fts_idx` for a plain GIN index on the generated column; dropped and recreated `meetings_with_stats` so it re-exposes `fts` through the view.

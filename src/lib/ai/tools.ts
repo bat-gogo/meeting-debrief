@@ -47,13 +47,11 @@ export const TOOLS: Anthropic.Messages.Tool[] = [
               },
               owner: {
                 type: "string",
-                description:
-                  "Named person responsible. Omit if no owner is explicit in the input.",
+                description: "Named person responsible. Omit if no owner is explicit in the input.",
               },
               due_hint: {
                 type: "string",
-                description:
-                  "Free-text timing hint like 'by Friday' or 'next week'. Omit if none.",
+                description: "Free-text timing hint like 'by Friday' or 'next week'. Omit if none.",
               },
             },
             required: ["content"],

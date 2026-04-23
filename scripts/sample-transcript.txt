@@ -1,0 +1,13 @@
+Sprint 24 retrospective — Product team — 2026-04-23.
+
+Present: Jamie (PM), Alex (frontend), Priya (backend), Sam (design).
+
+We kicked off by reviewing last sprint's commitments. Jamie noted the onboarding revamp shipped on time, though the completion rate metric dipped 2% — we need to understand why. Alex pointed out the new OAuth flow is 600ms slower than the old one in Chrome; Priya is going to dig into whether the session endpoint is the culprit and report back by Friday.
+
+Sam walked us through the revised empty-state designs for the dashboard. We decided to replace the current illustration-heavy placeholder with the minimal copy-first version — it tested better in Monday's usability session. Sam will have the Figma updated by end of day tomorrow and hand off to Alex for implementation.
+
+Priya raised a concern about the database migration backlog — we're at 11 pending migrations on staging and only one person who knows how the older ones work. We agreed this is a tech-debt risk but didn't decide on an owner this sprint. Jamie will put it on next week's planning agenda.
+
+Blocker: the feature flag service has been flaky twice this week. Alex said he'll open a ticket with infra today.
+
+I'll follow up with everyone once Priya posts the OAuth findings. Next retro is in two weeks.

@@ -26,9 +26,9 @@ Derived from `PLAN.md`. Tick as completed. Workshop minimum: 8 tasks; ≥6 compl
 
 ## Phase 4 — Debrief flow
 
-- [ ] Implement `debriefTranscript(text)` calling `claude-sonnet-4-6` with `tool_choice: { type: 'any' }` over the `record_debrief` and `reject_input` tools, returning a discriminated union
+- [x] Implement `debriefTranscript(text)` calling `claude-sonnet-4-6` with `tool_choice: { type: 'any' }` over the `record_debrief` and `reject_input` tools, returning a discriminated union
 - [ ] Build `new-meeting-form.tsx` with input → AI loading skeleton → review/edit form states; preserve textarea contents on rejection or error
-- [ ] Implement `saveMeeting` server action: insert meeting + batch-insert action items, return new id; redirect to `/meetings/[id]`
+- [x] Implement `saveMeeting` server action: insert meeting + batch-insert action items, return new id; redirect to `/meetings/[id]`
 - [ ] Verify "not a meeting" path: paste "hello world" → friendly amber rejection banner, no DB write
 
 ## Phase 5 — List + detail + checklist

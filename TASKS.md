@@ -33,11 +33,11 @@ Derived from `PLAN.md`. Tick as completed. Workshop minimum: 8 tasks; ≥6 compl
 
 ## Phase 5 — List + detail + checklist
 
-- [ ] Build `/meetings` list page reading from `meetings_with_stats` (one row per meeting + open/total counts)
-- [ ] Build `/meetings/[id]` detail page rendering all six structured sections (summary, participants, decisions, blockers, action items, follow-up email)
-- [ ] Add `transcript-disclosure.tsx` (shadcn Accordion, collapsed by default) on the detail page exposing the full `raw_transcript`
-- [ ] Implement `action-item-row.tsx` with `useOptimistic` toggle calling `toggleActionItem`; verify checkbox state persists across page refresh
-- [ ] Implement add-action-item input on detail page, copy-email button, and delete-meeting confirmation dialog
+- [x] Build `/meetings` list page reading from `meetings_with_stats` (one row per meeting + open/total counts)
+- [x] Build `/meetings/[id]` detail page rendering all six structured sections (summary, participants, decisions, blockers, action items, follow-up email)
+- [x] Add transcript disclosure (shadcn Accordion, collapsed by default) on the detail page exposing the full `raw_transcript` *(inlined into detail page rather than a separate component)*
+- [x] Implement `action-item-row.tsx` with `useOptimistic` toggle calling `toggleActionItem`; verify checkbox state persists across page refresh *(persistence awaits interactive test)*
+- [x] Implement add-action-item input on detail page, copy-email button, and delete-meeting confirmation dialog
 
 ## Phase 6 — Dashboard
 

@@ -124,10 +124,7 @@ export function NewMeetingForm() {
             className="min-h-64"
           />
           <div className="flex justify-end">
-            <Button
-              onClick={handleDebrief}
-              disabled={transcript.length === 0 || mode !== "input"}
-            >
+            <Button onClick={handleDebrief} disabled={transcript.length === 0 || mode !== "input"}>
               Debrief
             </Button>
           </div>

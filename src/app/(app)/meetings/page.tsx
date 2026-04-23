@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { EmptyState } from "@/components/empty-state";
+import { SearchInput } from "@/components/search-input";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/server";
@@ -16,12 +18,26 @@ function truncate(s: string, n: number) {
   return s.length <= n ? s : s.slice(0, n).trimEnd() + "…";
 }
 
-export default async function MeetingsListPage() {
+type PageProps = { searchParams: Promise<{ q?: string }> };
+
+export default async function MeetingsListPage({ searchParams }: PageProps) {
+  const { q } = await searchParams;
+  const query = q?.trim() ?? "";
+
   const supabase = await createClient();
-  const { data: meetings, error } = await supabase
+  let builder = supabase
     .from("meetings_with_stats")
     .select("*")
     .order("created_at", { ascending: false });
+
+  if (query) {
+    builder = builder.textSearch("fts", query, {
+      type: "websearch",
+      config: "english",
+    });
+  }
+
+  const { data: meetings, error } = await builder;
 
   if (error) {
     return (
@@ -48,18 +64,25 @@ export default async function MeetingsListPage() {
         </Link>
       </div>
 
+      <div className="mt-6">
+        <SearchInput defaultValue={query} />
+      </div>
+
       {rows.length === 0 ? (
-        <div className="mt-16 flex flex-col items-center gap-3 text-center">
-          <h2 className="text-xl font-semibold">No meetings yet</h2>
-          <p className="text-muted-foreground text-sm">
-            Paste your first transcript to get started.
-          </p>
-          <Link href="/meetings/new" className={buttonVariants()}>
-            New debrief
-          </Link>
-        </div>
+        query ? (
+          <EmptyState
+            title="No meetings match your search."
+            subtitle={`No results for "${query}". Try different keywords.`}
+          />
+        ) : (
+          <EmptyState
+            title="No meetings yet"
+            subtitle="Paste your first transcript to get started."
+            cta={{ href: "/meetings/new", label: "New debrief" }}
+          />
+        )
       ) : (
-        <ul className="mt-8 flex flex-col gap-3">
+        <ul className="mt-6 flex flex-col gap-3">
           {rows.map((m) => (
             <li key={m.id ?? ""}>
               <Link

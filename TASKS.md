@@ -46,10 +46,10 @@ Derived from `PLAN.md`. Tick as completed. Workshop minimum: 8 tasks; ≥6 compl
 
 ## Phase 7 — Search + polish + mobile
 
-- [ ] Add tsvector-backed search input to `/meetings` (URL-bound `?q=`); fall back to `ILIKE` only if behind schedule
-- [ ] Add designed empty states to dashboard, meetings list, and search-no-results
-- [ ] QA mobile layout at 375px on dashboard, new-meeting, and detail screens
-- [ ] Add `src/app/error.tsx` global error boundary and mount `<Toaster />` once in the app layout
+- [x] Add tsvector-backed search input to `/meetings` (URL-bound `?q=`); generated `meetings.fts` column + websearch_to_tsquery
+- [x] Add designed empty states to dashboard, meetings list, and search-no-results *(reusable `EmptyState` component)*
+- [x] QA mobile layout at 375px on dashboard, new-meeting, and detail screens *(one fix: nav stacks brand above nav-items at <sm to prevent 375px overflow)*
+- [x] Add `src/app/error.tsx` global error boundary and mount `<Toaster />` once in the app layout *(Toaster mounted in Phase 4B)*
 
 ## Phase 8 — Submission
 
@@ -62,6 +62,10 @@ Derived from `PLAN.md`. Tick as completed. Workshop minimum: 8 tasks; ≥6 compl
 
 Tick to indicate the cut was applied (not that the feature was built):
 
-- [ ] Swapped tsvector search for `ILIKE` (saves ~10 min)
-- [ ] Skipped manual add-action-item on detail page (saves ~10 min)
-- [ ] Replaced delete-confirm Dialog with browser `confirm()` (saves ~5 min)
+- [ ] Swapped tsvector search for `ILIKE` — **CUT NOT APPLIED**. Implemented proper `tsvector` search: generated `meetings.fts` column (`GENERATED ALWAYS AS STORED`), column GIN index, `websearch_to_tsquery('english', q)` via Supabase JS `.textSearch("fts", q, { type: "websearch", config: "english" })`. Chose quality over time budget.
+- [ ] Skipped manual add-action-item on detail page (saves ~10 min) — **CUT NOT APPLIED**, shipped on detail page.
+- [ ] Replaced delete-confirm Dialog with browser `confirm()` (saves ~5 min) — **CUT NOT APPLIED**, shipped with shadcn `Dialog`.
+
+## Known advisor warnings (documented, not fixed)
+
+- Supabase advisor surfaces **`leaked_password_protection`** — Pro-plan feature that checks signup/reset passwords against HaveIBeenPwned. Out of scope for this free-tier demo build.

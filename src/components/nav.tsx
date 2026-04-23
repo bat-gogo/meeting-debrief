@@ -13,11 +13,11 @@ export function Nav({ userEmail }: { userEmail: string }) {
 
   return (
     <header className="border-b">
-      <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-3">
+      <div className="mx-auto flex max-w-5xl flex-col items-start gap-2 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
         <Link href="/" className="font-semibold tracking-tight">
           Meeting Debrief
         </Link>
-        <nav className="flex items-center gap-2 sm:gap-3">
+        <nav className="flex flex-wrap items-center gap-2 sm:gap-3">
           <Link
             href="/meetings"
             className={cn(

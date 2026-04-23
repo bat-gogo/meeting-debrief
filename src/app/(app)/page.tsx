@@ -1,7 +1,5 @@
-import Link from "next/link";
-
 import { ActionItemRow } from "@/components/action-item-row";
-import { buttonVariants } from "@/components/ui/button";
+import { EmptyState } from "@/components/empty-state";
 import { Card, CardContent } from "@/components/ui/card";
 import { createClient } from "@/lib/supabase/server";
 
@@ -34,15 +32,11 @@ export default async function DashboardPage() {
       </div>
 
       {rows.length === 0 ? (
-        <div className="mt-16 flex flex-col items-center gap-3 text-center">
-          <h2 className="text-xl font-semibold">You&apos;re all clear.</h2>
-          <p className="text-muted-foreground text-sm">
-            Debrief a meeting to start tracking work.
-          </p>
-          <Link href="/meetings/new" className={buttonVariants()}>
-            New debrief
-          </Link>
-        </div>
+        <EmptyState
+          title="You're all clear."
+          subtitle="Debrief a meeting to start tracking work."
+          cta={{ href: "/meetings/new", label: "New debrief" }}
+        />
       ) : (
         <Card className="mt-8">
           <CardContent>

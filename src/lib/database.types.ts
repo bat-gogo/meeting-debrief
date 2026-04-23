@@ -65,6 +65,7 @@ export type Database = {
           created_at: string;
           decisions: string[];
           followup_email: string;
+          fts: unknown;
           id: string;
           meeting_date: string;
           participants: string[];
@@ -78,6 +79,7 @@ export type Database = {
           created_at?: string;
           decisions?: string[];
           followup_email?: string;
+          fts?: unknown;
           id?: string;
           meeting_date?: string;
           participants?: string[];
@@ -91,6 +93,7 @@ export type Database = {
           created_at?: string;
           decisions?: string[];
           followup_email?: string;
+          fts?: unknown;
           id?: string;
           meeting_date?: string;
           participants?: string[];
@@ -109,6 +112,7 @@ export type Database = {
           created_at: string | null;
           decisions: string[] | null;
           followup_email: string | null;
+          fts: unknown;
           id: string | null;
           meeting_date: string | null;
           open_count: number | null;

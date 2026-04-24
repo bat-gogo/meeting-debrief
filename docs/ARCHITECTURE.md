@@ -1,6 +1,6 @@
 # Architecture
 
-Why-not-how notes on the non-obvious decisions in Meeting Debrief. For setup and feature lists, see the top-level [README](../README.md). For the raw SQL, see [`database/migrations/`](../database/migrations).
+Why-not-how notes on the non-obvious decisions in Meeting Debrief. For setup and feature lists, see the top-level [README](../README.md). For the raw SQL, see [`database/`](../database).
 
 ---
 

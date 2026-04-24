@@ -113,7 +113,7 @@ pnpm install
 ### 2. Set up Supabase
 
 1. Create a new project at [supabase.com](https://supabase.com).
-2. Apply the migrations in order — paste each file from [`database/migrations/`](./database/migrations) into Supabase Studio's SQL editor, or run `supabase db push` if you've linked the project with the Supabase CLI.
+2. Apply the migrations in order — paste each file from [`database/`](./database) into Supabase Studio's SQL editor, or run `supabase db push` if you've linked the project with the Supabase CLI.
 3. Disable email confirmation: **Authentication → Providers → Email → uncheck "Confirm email"**.
 4. Copy your project URL and publishable anon key from **Settings → API**.
 
@@ -168,8 +168,7 @@ meeting-debrief/
 │   │   ├── database.types.ts # Supabase-generated types
 │   │   └── schemas.ts       # Zod schemas + inferred TypeScript types
 │   └── proxy.ts             # Auth cookie refresh + route gating (Next 16 convention)
-├── database/
-│   └── migrations/          # Sequenced SQL migrations (see README there)
+├── database/                # Sequenced SQL migrations (see README there)
 ├── img/                     # Screenshots embedded in this README
 ├── docs/                    # Architecture & extended docs
 ├── process/                 # Workshop plan-mode artifacts (history — optional reading)

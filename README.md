@@ -1,70 +1,183 @@
 # Meeting Debrief
 
-A personal meeting intelligence tool. Paste a meeting transcript or rough notes, an AI (Claude Sonnet 4.6) extracts structured intelligence — decisions, action items, blockers, a follow-up email draft — and saves everything to a searchable per-user history. Action items become checkboxes you tick off over time, giving you a lightweight task manager scoped to the meetings that created them.
+> Turn messy meeting transcripts into decisions, action items, and a ready-to-send follow-up email — and keep everything searchable.
 
-Built in the Vibe Coding workshop as a 4-hour exercise in plan-mode, task tracking, and preview-approval discipline.
+[![Next.js 16](https://img.shields.io/badge/Next.js-16-black?logo=next.js)](https://nextjs.org)
+[![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+[![Supabase](https://img.shields.io/badge/Supabase-Postgres%20%2B%20RLS-3ECF8E?logo=supabase&logoColor=white)](https://supabase.com)
+[![Deployed on Vercel](https://img.shields.io/badge/Deployed-Vercel-black?logo=vercel)](https://meeting-debrief.vercel.app)
 
-## Live demo
+Paste a transcript or rough notes. An AI extracts participants, decisions, action items, blockers, and a follow-up email — you review and edit before saving. Action items become checkboxes you tick off across a cross-meeting dashboard, so the commitments you made in Monday's retro don't get lost by Thursday. Everything is scoped to your account via Postgres Row Level Security.
 
-https://meeting-debrief.vercel.app
+**Live demo:** https://meeting-debrief.vercel.app
 
-Test credentials are welcome — sign up with any email + password (min 6 chars). Email confirmation is disabled so signup is instant.
+---
 
-## Stack
+## Features
 
-- **Framework**: Next.js 16.2 (App Router, React 19, TypeScript strict)
-- **UI**: Tailwind CSS 4, shadcn/ui (base-ui), Lucide icons, sonner toasts
-- **Auth + DB**: Supabase — Postgres with Row Level Security, `@supabase/ssr` for Next cookie-bridged sessions
-- **AI**: Anthropic Claude Sonnet 4.6, `@anthropic-ai/sdk`, tool-use with two tools (`record_debrief`, `reject_input`) + `tool_choice: { type: "any" }`
-- **Hosting**: Vercel with automatic deploys from `main`
-- **Package manager**: pnpm
+- **Paste and go** — a transcript or a quick braindump becomes structured output in seconds.
+- **Review before you save** — the AI draft is always editable. Rename the title, drop action items that don't apply, rewrite the follow-up email.
+- **Tick off action items across meetings** — a single dashboard shows every open commitment, oldest first, with a one-click link back to its source meeting.
+- **Add items that the AI missed** — manual action items on any meeting, any time.
+- **Search your history** — full-text search across title, summary, and transcript using Postgres tsvector + `websearch_to_tsquery`.
+- **Copy the follow-up email** — one click puts the 120-180 word draft on your clipboard.
+- **Friendly rejection** — if the input isn't a meeting, you get a clear message, not a broken result.
+- **Signup without an inbox** — email confirmation is disabled so you can try it without waiting on delivery.
 
-## Local setup
+## Screenshots
 
-1. Clone the repo.
-2. `pnpm install`
-3. Copy `.env.local.example` to `.env.local` and fill in:
-   - `NEXT_PUBLIC_SUPABASE_URL`
-   - `NEXT_PUBLIC_SUPABASE_ANON_KEY` (publishable format: `sb_publishable_...`)
-   - `ANTHROPIC_API_KEY`
-4. `pnpm dev`
+<a href="./img/dashboard.png">
+  <img src="./img/dashboard.png" alt="Dashboard — every open action item across every meeting, oldest first" width="700">
+</a>
 
-The Supabase schema is in [PLAN.md](PLAN.md) (database schema section). Apply it via Supabase's SQL editor before first run, then disable email confirmation in **Authentication → Providers → Email**.
+*Dashboard: every open action item across every meeting, oldest first. Tick to mark done, click the meeting title to jump back.*
+
+<a href="./img/meetings-list.png">
+  <img src="./img/meetings-list.png" alt="Meetings list with search input and open/total counts" width="700">
+</a>
+
+*Meetings list with full-text search across title, summary, and transcript. Each row shows open vs. total action items.*
+
+<a href="./img/review-draft.png">
+  <img src="./img/review-draft.png" alt="Review-and-edit form populated from AI extraction" width="700">
+</a>
+
+*Review-and-edit form after the AI extraction. Title, date, participants, summary, decisions, blockers — all editable before saving.*
+
+<a href="./img/meeting-detail.png">
+  <img src="./img/meeting-detail.png" alt="Meeting detail page with action-item checklist and copy-email / delete controls" width="700">
+</a>
+
+*Meeting detail page. Summary, decisions, blockers, live action-item checklist, follow-up email with Copy button, and a collapsed accordion for the original transcript.*
+
+## How it works
+
+The debrief flow is a single paste → review → save loop. Claude Sonnet 4.6 is called via tool-use: two tools (`record_debrief`, `reject_input`) with `tool_choice: { type: "any" }` force the model to call exactly one, so there's no parsing ambiguity. Zod re-validates the result server-side before the save commits.
+
+1. **Paste** a transcript or rough notes (≥ 40 characters).
+2. **AI extraction** produces structured intelligence — participants, summary, decisions, blockers, action items with owners and due hints, and a first-person follow-up email (~150 words).
+3. **Review & edit** — every field is editable. Add or remove action items, rewrite the summary, fix a misattributed owner.
+4. **Save** — the meeting lands in your history, action items become tickable checkboxes, and the original transcript stays accessible via a collapsed accordion.
+
+## Tech stack
+
+| Category | Choice |
+|---|---|
+| Framework | Next.js 16 (App Router, React 19) |
+| Language | TypeScript (strict) |
+| Styling | Tailwind CSS 4, shadcn/ui (base-ui primitives), Lucide icons |
+| Database | Supabase Postgres with Row Level Security |
+| Auth | Supabase Auth via `@supabase/ssr` (cookie-bridged sessions) |
+| AI model | Anthropic Claude Sonnet 4.6 (tool-use) |
+| Search | Postgres `tsvector` with `websearch_to_tsquery` |
+| Validation | Zod |
+| Hosting | Vercel |
+| Package manager | pnpm |
+
+## Getting started
+
+### Prerequisites
+
+- Node.js ≥ 20
+- pnpm ≥ 9
+- A Supabase project (free tier is enough)
+- An Anthropic API key (a single debrief costs roughly $0.01 at current Sonnet 4.6 pricing)
+
+### 1. Clone and install
+
+```bash
+git clone https://github.com/bat-gogo/meeting-debrief.git
+cd meeting-debrief
+pnpm install
+```
+
+### 2. Set up Supabase
+
+1. Create a new project at [supabase.com](https://supabase.com).
+2. Apply the migrations in order — paste each file from [`database/migrations/`](./database/migrations) into Supabase Studio's SQL editor, or run `supabase db push` if you've linked the project with the Supabase CLI.
+3. Disable email confirmation: **Authentication → Providers → Email → uncheck "Confirm email"**.
+4. Copy your project URL and publishable anon key from **Settings → API**.
+
+### 3. Configure environment
+
+Copy the template:
+
+```bash
+cp .env.local.example .env.local
+```
+
+Fill in:
+
+```
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_...
+ANTHROPIC_API_KEY=sk-ant-...
+```
+
+### 4. Run
+
+```bash
+pnpm dev
+```
+
+Open [http://localhost:3000](http://localhost:3000).
 
 ## Architecture highlights
 
-- **RLS is the entire privacy story.** Every row has a `user_id` column; policies restrict all operations to `(select auth.uid()) = user_id`. The `meetings_with_stats` view uses `security_invoker = true` so the aggregation respects the caller's policies (a subtle but critical setting — without it the view bypasses RLS and leaks other users' data).
-- **Tool-use for structured output.** Anthropic has no JSON mode, and prompt-engineered JSON is brittle. Two tools — `record_debrief` for happy-path extraction, `reject_input` for "not a meeting" detection — with `tool_choice: { type: "any" }` forces the model to call exactly one. The server re-validates with Zod as belt-and-braces.
-- **Full-text search via generated tsvector column.** `meetings.fts` is `GENERATED ALWAYS AS STORED`, Postgres maintains it automatically on every insert/update. GIN index + `websearch_to_tsquery('english', q)` via Supabase JS `.textSearch("fts", ...)`. No ILIKE fallback was shipped.
-- **Dashboard + detail pages use `useOptimistic` + `useTransition`** so action-item checkboxes flip instantly; server action revalidates both `/` and `/meetings/[id]` on every mutation so cross-view state stays in sync.
-- **Next.js 16 proxy convention** (middleware → proxy rename) applied via codemod. Redirect behavior smoke-tested with `Invoke-WebRequest` to confirm no silent regression to an infinite loop.
+Three non-obvious decisions worth understanding — more detail in [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md).
 
-## Notable trade-offs
+**Row Level Security is the entire privacy model.** Every row has a `user_id` column, and RLS policies restrict all operations to `(select auth.uid()) = user_id`. The `meetings_with_stats` view uses `security_invoker = true` — without it, the view would bypass RLS and leak every user's data to every authenticated caller.
 
-- **Email confirmation disabled** so graders can sign up without an inbox. Production equivalent would enable it and use a real SMTP provider. Documented and surfaced in the signup server action: if confirmation ever gets re-enabled the user sees a clear error instead of a silent "check your email" success.
-- **No automated tests.** The workshop budget doesn't fit them. Manual QA with two accounts covers the privacy non-negotiable; Supabase MCP-driven SQL queries simulate cross-user access and verify RLS at the database boundary.
-- **Leaked password protection disabled** — it's a Supabase Pro plan feature (HaveIBeenPwned lookup on signup). Out of scope for this free-tier build; would be first production hardening step.
-- **tsvector fallback to ILIKE was NOT applied** despite being on the plan's cut-candidate list. The user explicitly chose quality over time budget after initial testing.
+**Tool-use for structured AI output.** Instead of prompt-engineered JSON, the app defines two Anthropic tools — `record_debrief` for the happy path and `reject_input` for "not a meeting" detection — with `tool_choice: { type: "any" }` forcing the model to call exactly one. Zod re-validates the tool input server-side as belt-and-braces.
 
-## Workshop artifacts
+**Generated tsvector column for search.** `meetings.fts` is `GENERATED ALWAYS AS STORED`, so Postgres maintains it automatically on every insert and update. A GIN index on the column plus `.textSearch("fts", q, { type: "websearch" })` via Supabase JS maps directly to `websearch_to_tsquery('english', q)` — no triggers, no application-layer sync.
 
-All process artifacts are under [`process/`](process/):
+## Project structure
 
-- [`01-initial-plan.md`](process/01-initial-plan.md) — the AI's first-draft plan before user review
-- [`02-rejection.md`](process/02-rejection.md) — documented pushback on three gaps (missing raw transcript in detail UI, dangling view reference, email confirmation default) plus one proactive fix the AI added (`security_invoker=true`)
-- [`03-refined-plan.md`](process/03-refined-plan.md) — frozen snapshot of the approved plan
-- [`04-final-tasks.md`](process/04-final-tasks.md) — TASKS.md snapshot at project end
+```
+meeting-debrief/
+├── src/
+│   ├── app/
+│   │   ├── (app)/           # Protected routes: dashboard, meetings, detail, new
+│   │   ├── (auth)/          # Login / signup + auth server actions
+│   │   ├── error.tsx        # Global error boundary
+│   │   └── layout.tsx       # Root layout + Toaster mount
+│   ├── components/          # UI components (most are client islands)
+│   ├── lib/
+│   │   ├── ai/              # Anthropic SDK wrapper + tool schemas + system prompt
+│   │   ├── supabase/        # Server / client / middleware helpers
+│   │   ├── database.types.ts # Supabase-generated types
+│   │   └── schemas.ts       # Zod schemas + inferred TypeScript types
+│   └── proxy.ts             # Auth cookie refresh + route gating (Next 16 convention)
+├── database/
+│   └── migrations/          # Sequenced SQL migrations (see README there)
+├── img/                     # Screenshots embedded in this README
+├── docs/                    # Architecture & extended docs
+├── process/                 # Workshop plan-mode artifacts (history — optional reading)
+└── scripts/                 # Dev helpers
+```
 
-Original `spec.pdf` is referenced but gitignored (binary).
+## Development notes
 
-## Reflection
+- `pnpm lint` — ESLint flat config
+- `pnpm format` — Prettier with Tailwind plugin
+- `pnpm format:check` — CI-friendly format verification
+- `pnpm build` — must be clean before PR
 
-Plan-mode earned its keep in the first 30 minutes. The AI's initial plan looked clean, but reading it as an adversarial reviewer surfaced three real gaps: the detail-page JSX listed every section except the raw transcript the spec explicitly required; the Phase 5 task referenced a `meetings_with_stats` view that the Phase 2 SQL never created; and Supabase's default email confirmation would have silently blocked a grader from signing up on the live URL. None of these would have been caught by a "looks good" skim. The refined plan added the transcript Accordion, committed the CREATE VIEW, and disabled email confirmation before a single file was written.
+To verify your Anthropic key + prompt work end-to-end, run the three-case harness:
 
-Tasks helped me keep cut discipline visible — the three cut candidates stayed at the bottom of `TASKS.md` as explicit "not applied" entries rather than invisible silent compromises.
+```bash
+pnpm dlx tsx --env-file=.env.local scripts/test-debrief.ts
+```
 
-Preview-approval broke down once, in Phase 4B: the loading skeleton tested fine programmatically but felt frozen to a real user in Chrome. Next time I'd run browser-level testing after every phase that touches UI, not only at the end. Supabase MCP and Claude-for-Chrome as parallel surfaces made that kind of verification cheap enough to do continuously.
+It exercises a real transcript (expects `draft`), a too-short input (expects `rejected` client-side), and a non-meeting paragraph (expects `rejected` via the `reject_input` tool).
 
-## Credits
+## License
 
-Built with Claude Opus 4.7 (Claude Code in VS Code) + Claude Sonnet 4.6 (in the app) + Supabase MCP connector (schema verification, RLS audits, type generation) driving a three-surface vibe-coding workflow: desktop Claude for planning, Claude Code for execution, and Claude for Chrome for end-to-end browser testing.
+MIT — see [LICENSE](./LICENSE).
+
+## Acknowledgments
+
+Built with [Anthropic Claude](https://claude.com), [Supabase](https://supabase.com), [Vercel](https://vercel.com), [Next.js](https://nextjs.org), and [shadcn/ui](https://ui.shadcn.com).
+
+Originally created during the Encorp Vibe Coding workshop. Plan-mode and task-tracking artifacts from that process are preserved in [`process/`](./process) for anyone interested in how the build was structured.

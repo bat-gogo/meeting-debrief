@@ -252,17 +252,22 @@ function DraftEditor({
       className="flex flex-col gap-8"
     >
       <section className="flex flex-col gap-4">
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-1.5">
           <Label htmlFor="title">Title</Label>
-          <Input
+          <Textarea
             id="title"
+            rows={1}
             value={draft.title}
             onChange={(e) => updateDraft("title", e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") e.preventDefault();
+            }}
             required
+            className="field-sizing-content min-h-9 resize-none"
           />
         </div>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-1.5">
             <Label htmlFor="meeting_date">Date</Label>
             <Input
               id="meeting_date"
@@ -271,19 +276,21 @@ function DraftEditor({
               onChange={(e) => updateDraft("meeting_date", e.target.value || undefined)}
             />
           </div>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-1.5">
             <Label htmlFor="participants">Participants</Label>
-            <Input
+            <Textarea
               id="participants"
-              placeholder="Alice, Bob, Carol"
+              rows={1}
+              placeholder="Comma separated"
               value={participantsText}
               onChange={(e) => setParticipantsText(e.target.value)}
+              className="field-sizing-content min-h-9 resize-none"
             />
           </div>
         </div>
       </section>
 
-      <section className="flex flex-col gap-2">
+      <section className="flex flex-col gap-1.5">
         <Label htmlFor="summary">Summary</Label>
         <Textarea
           id="summary"
@@ -314,7 +321,7 @@ function DraftEditor({
         onChange={(items) => updateDraft("action_items", items)}
       />
 
-      <section className="flex flex-col gap-2">
+      <section className="flex flex-col gap-1.5">
         <Label htmlFor="followup_email">Follow-up email</Label>
         <Textarea
           id="followup_email"
@@ -357,11 +364,13 @@ function StringListSection({
       ) : (
         <ul className="flex flex-col gap-2">
           {items.map((item, idx) => (
-            <li key={idx} className="flex items-center gap-2">
-              <Input
+            <li key={idx} className="flex items-start gap-2">
+              <Textarea
+                rows={1}
                 value={item}
                 onChange={(e) => onChange(items.map((v, i) => (i === idx ? e.target.value : v)))}
                 placeholder={placeholder}
+                className="field-sizing-content min-h-9 resize-none"
               />
               <Button
                 type="button"
@@ -411,11 +420,13 @@ function ActionItemsSection({
           {items.map((item, idx) => (
             <li key={idx} className="rounded-md border p-3">
               <div className="flex flex-col gap-2">
-                <Input
+                <Textarea
+                  rows={1}
                   value={item.content}
                   onChange={(e) => update(idx, { content: e.target.value })}
                   placeholder="What needs to happen"
                   required
+                  className="field-sizing-content min-h-9 resize-none"
                 />
                 <div className="grid grid-cols-1 gap-2 sm:grid-cols-[1fr_1fr_auto]">
                   <Input

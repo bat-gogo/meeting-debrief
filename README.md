@@ -27,25 +27,25 @@ Paste a transcript or rough notes. An AI extracts participants, decisions, actio
 ## Screenshots
 
 <a href="./img/dashboard.png">
-  <img src="./img/dashboard.png" alt="Dashboard — every open action item across every meeting, oldest first" width="700">
+  <img src="./img/dashboard.png" alt="Dashboard — every open action item across every meeting, oldest first" width="500">
 </a>
 
 *Dashboard: every open action item across every meeting, oldest first. Tick to mark done, click the meeting title to jump back.*
 
 <a href="./img/meetings-list.png">
-  <img src="./img/meetings-list.png" alt="Meetings list with search input and open/total counts" width="700">
+  <img src="./img/meetings-list.png" alt="Meetings list with search input and open/total counts" width="500">
 </a>
 
 *Meetings list with full-text search across title, summary, and transcript. Each row shows open vs. total action items.*
 
 <a href="./img/review-draft.png">
-  <img src="./img/review-draft.png" alt="Review-and-edit form populated from AI extraction" width="700">
+  <img src="./img/review-draft.png" alt="Review-and-edit form populated from AI extraction" width="500">
 </a>
 
 *Review-and-edit form after the AI extraction. Title, date, participants, summary, decisions, blockers — all editable before saving.*
 
 <a href="./img/meeting-detail.png">
-  <img src="./img/meeting-detail.png" alt="Meeting detail page with action-item checklist and copy-email / delete controls" width="700">
+  <img src="./img/meeting-detail.png" alt="Meeting detail page with action-item checklist and copy-email / delete controls" width="500">
 </a>
 
 *Meeting detail page. Summary, decisions, blockers, live action-item checklist, follow-up email with Copy button, and a collapsed accordion for the original transcript.*

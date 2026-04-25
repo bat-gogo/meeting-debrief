@@ -40,8 +40,8 @@ export function ActionItemRow({
   }
 
   return (
-    <li className="flex items-start gap-3 py-2">
-      <div className="pt-0.5">
+    <li className="flex items-start gap-3 border-t border-[var(--ink-150)] py-2.5 first:border-t-0">
+      <div className="pt-[3px]">
         <Checkbox
           checked={optimisticIsDone}
           onCheckedChange={handleCheckedChange}
@@ -51,21 +51,23 @@ export function ActionItemRow({
       <div className="flex min-w-0 flex-1 flex-col gap-0.5">
         <p
           className={cn(
-            "text-sm break-words",
-            optimisticIsDone && "text-muted-foreground line-through",
+            "text-[14px] leading-[1.5] break-words",
+            optimisticIsDone
+              ? "text-[var(--ink-500)] line-through"
+              : "text-[var(--ink-800)]",
           )}
         >
           {item.content}
         </p>
         {item.owner || item.due_hint ? (
-          <p className="text-muted-foreground text-xs">
+          <p className="text-xs text-[var(--ink-500)]">
             {[item.owner, item.due_hint].filter(Boolean).join(" · ")}
           </p>
         ) : null}
         {meetingLink ? (
           <Link
             href={meetingLink.href}
-            className="text-muted-foreground hover:text-foreground text-xs underline underline-offset-2"
+            className="text-xs text-[var(--ink-500)] underline underline-offset-2 decoration-[var(--ink-300)] hover:text-[var(--ink-800)] hover:decoration-[var(--ink-500)]"
           >
             in {meetingLink.title}
           </Link>

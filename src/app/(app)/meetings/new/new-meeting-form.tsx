@@ -1,5 +1,6 @@
 "use client";
 
+import { Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -8,7 +9,6 @@ import { generateDebrief, saveMeeting } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import type { ActionItemDraft, MeetingDraft } from "@/lib/schemas";
 import { cn } from "@/lib/utils";
@@ -148,8 +148,12 @@ export function NewMeetingForm() {
         disabled={isLoading}
         className={cn("min-h-64 transition-opacity", isLoading && "opacity-50")}
       />
-      <div className="flex justify-end">
+      <div className="flex items-center justify-between gap-3">
+        <span className="font-mono text-xs text-[var(--ink-500)]">
+          {transcript.length.toLocaleString()} chars
+        </span>
         <Button onClick={handleDebrief} disabled={transcript.length === 0 || mode !== "input"}>
+          <Sparkles className="size-3.5" />
           {isLoading ? "Debriefing…" : "Debrief"}
         </Button>
       </div>
@@ -161,56 +165,56 @@ export function NewMeetingForm() {
 function BannerView({ banner }: { banner: Banner }) {
   const styles =
     banner.kind === "rejected"
-      ? "border-amber-500/50 bg-amber-50 text-amber-900 dark:bg-amber-950/40 dark:text-amber-100"
-      : "border-destructive/50 bg-destructive/10 text-destructive";
+      ? "border-[var(--warn-700)]/30 bg-[var(--warn-100)] text-[var(--warn-700)]"
+      : "border-[var(--danger-600)]/30 bg-[var(--danger-100)] text-[var(--danger-600)]";
   const title =
     banner.kind === "rejected" ? "That doesn't look like a meeting" : "Something went wrong";
   const body = banner.kind === "rejected" ? banner.reason : banner.message;
   return (
-    <div className={`rounded-md border px-4 py-3 text-sm ${styles}`} role="alert">
+    <div className={`rounded-lg border px-4 py-3 text-sm ${styles}`} role="alert">
       <div className="font-medium">{title}</div>
-      <div className="mt-1">{body}</div>
+      <div className="mt-1 opacity-90">{body}</div>
     </div>
   );
 }
 
 function LoadingSkeleton({ message, elapsed }: { message: string; elapsed: number }) {
   return (
-    <div className="flex flex-col gap-4 rounded-md border p-4">
+    <div className="flex flex-col gap-4 rounded-xl border border-[var(--border)] bg-[var(--ink-000)] p-5 shadow-xs">
       <div className="flex items-center justify-between">
-        <p className="text-muted-foreground text-sm">
-          <span className="mr-1 inline-block animate-pulse">●</span>
+        <p className="text-sm text-[var(--ink-700)]">
+          <span className="mr-1.5 inline-block animate-pulse text-[var(--accent-600)]">●</span>
           {message}…
         </p>
-        <p className="text-muted-foreground text-xs tabular-nums">{elapsed}s</p>
+        <p className="font-mono text-xs tabular-nums text-[var(--ink-500)]">{elapsed}s</p>
       </div>
       <div className="flex flex-col gap-6">
         <div className="flex flex-col gap-2">
-          <Skeleton className="h-8 w-2/3" />
-          <Skeleton className="h-4 w-32" />
+          <div className="skeleton h-7 w-2/3" />
+          <div className="skeleton h-3.5 w-32" />
         </div>
         <div className="flex flex-col gap-2">
-          <Skeleton className="h-5 w-24" />
-          <Skeleton className="h-4 w-full" />
-          <Skeleton className="h-4 w-full" />
-          <Skeleton className="h-4 w-2/3" />
+          <div className="skeleton h-4 w-24" />
+          <div className="skeleton h-3.5 w-full" />
+          <div className="skeleton h-3.5 w-full" />
+          <div className="skeleton h-3.5 w-2/3" />
         </div>
         <div className="flex flex-col gap-2">
-          <Skeleton className="h-5 w-24" />
-          <Skeleton className="h-4 w-5/6" />
-          <Skeleton className="h-4 w-4/6" />
-          <Skeleton className="h-4 w-5/6" />
+          <div className="skeleton h-4 w-24" />
+          <div className="skeleton h-3.5 w-5/6" />
+          <div className="skeleton h-3.5 w-4/6" />
+          <div className="skeleton h-3.5 w-5/6" />
         </div>
         <div className="flex flex-col gap-2">
-          <Skeleton className="h-5 w-28" />
-          <Skeleton className="h-4 w-full" />
-          <Skeleton className="h-4 w-full" />
-          <Skeleton className="h-4 w-4/5" />
-          <Skeleton className="h-4 w-3/5" />
+          <div className="skeleton h-4 w-28" />
+          <div className="skeleton h-3.5 w-full" />
+          <div className="skeleton h-3.5 w-full" />
+          <div className="skeleton h-3.5 w-4/5" />
+          <div className="skeleton h-3.5 w-3/5" />
         </div>
         <div className="flex flex-col gap-2">
-          <Skeleton className="h-5 w-32" />
-          <Skeleton className="h-24 w-full" />
+          <div className="skeleton h-4 w-32" />
+          <div className="skeleton h-20 w-full" />
         </div>
       </div>
     </div>
@@ -358,9 +362,9 @@ function StringListSection({
 }) {
   return (
     <section className="flex flex-col gap-3">
-      <h2 className="text-sm font-medium">{title}</h2>
+      <h2 className="text-xs font-medium text-[var(--ink-700)]">{title}</h2>
       {items.length === 0 ? (
-        <p className="text-muted-foreground text-sm">None.</p>
+        <p className="text-sm text-[var(--ink-500)]">None.</p>
       ) : (
         <ul className="flex flex-col gap-2">
           {items.map((item, idx) => (
@@ -412,13 +416,13 @@ function ActionItemsSection({
 
   return (
     <section className="flex flex-col gap-3">
-      <h2 className="text-sm font-medium">Action items</h2>
+      <h2 className="text-xs font-medium text-[var(--ink-700)]">Action items</h2>
       {items.length === 0 ? (
-        <p className="text-muted-foreground text-sm">None.</p>
+        <p className="text-sm text-[var(--ink-500)]">None.</p>
       ) : (
         <ul className="flex flex-col gap-3">
           {items.map((item, idx) => (
-            <li key={idx} className="rounded-md border p-3">
+            <li key={idx} className="rounded-lg border border-[var(--border)] bg-[var(--ink-050)] p-3">
               <div className="flex flex-col gap-2">
                 <Textarea
                   rows={1}

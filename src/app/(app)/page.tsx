@@ -1,3 +1,5 @@
+import { CheckCircle2 } from "lucide-react";
+
 import { ActionItemRow } from "@/components/action-item-row";
 import { EmptyState } from "@/components/empty-state";
 import { Card, CardContent } from "@/components/ui/card";
@@ -13,9 +15,14 @@ export default async function DashboardPage() {
 
   if (error) {
     return (
-      <div className="mx-auto max-w-4xl px-4 py-8">
-        <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-        <p className="text-destructive mt-4 text-sm">
+      <div className="mx-auto max-w-4xl px-6 py-10 md:px-8">
+        <h1
+          className="font-display text-[2.125rem] font-medium tracking-tight text-[var(--ink-900)]"
+          style={{ fontVariationSettings: '"opsz" 60' }}
+        >
+          Dashboard
+        </h1>
+        <p className="mt-4 text-sm text-[var(--danger-600)]">
           Couldn&apos;t load action items: {error.message}
         </p>
       </div>
@@ -25,14 +32,22 @@ export default async function DashboardPage() {
   const rows = items ?? [];
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-8">
+    <div className="mx-auto max-w-4xl px-6 py-10 md:px-8">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-        <p className="text-muted-foreground mt-1 text-sm">Every open item, oldest first.</p>
+        <h1
+          className="font-display text-[2.125rem] font-medium tracking-tight text-[var(--ink-900)]"
+          style={{ fontVariationSettings: '"opsz" 60' }}
+        >
+          Dashboard
+        </h1>
+        <p className="mt-1.5 text-sm text-[var(--ink-500)]">
+          Every open item, oldest first.
+        </p>
       </div>
 
       {rows.length === 0 ? (
         <EmptyState
+          icon={CheckCircle2}
           title="You're all clear."
           subtitle="Debrief a meeting to start tracking work."
           cta={{ href: "/meetings/new", label: "New debrief" }}

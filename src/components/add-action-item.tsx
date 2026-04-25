@@ -1,5 +1,6 @@
 "use client";
 
+import { Plus } from "lucide-react";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 
@@ -25,7 +26,7 @@ export function AddActionItem({ meetingId }: { meetingId: string }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex items-center gap-2">
+    <form onSubmit={handleSubmit} className="mt-3 flex items-center gap-2">
       <Input
         value={content}
         onChange={(e) => setContent(e.target.value)}
@@ -33,6 +34,7 @@ export function AddActionItem({ meetingId }: { meetingId: string }) {
         disabled={isPending}
       />
       <Button type="submit" size="sm" disabled={!content.trim() || isPending}>
+        <Plus className="size-3.5" />
         {isPending ? "Adding…" : "Add"}
       </Button>
     </form>

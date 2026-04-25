@@ -9,7 +9,12 @@ function Input({ className, type, ...props }: React.ComponentProps<"input">) {
       type={type}
       data-slot="input"
       className={cn(
-        "border-input file:text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 disabled:bg-input/50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:bg-input/30 dark:disabled:bg-input/80 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 h-8 w-full min-w-0 rounded-lg border bg-transparent px-2.5 py-1 text-base transition-colors outline-none file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-3 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:ring-3 md:text-sm",
+        "w-full min-w-0 rounded-lg border border-[var(--border)] bg-[var(--ink-000)] px-3 py-2.5 text-sm text-[var(--ink-800)] outline-none transition-[border-color,box-shadow] duration-150",
+        "placeholder:text-[var(--ink-400)]",
+        "focus:border-[var(--accent-500)] focus:ring-[3px] focus:ring-[var(--accent-050)]",
+        "disabled:bg-[var(--ink-100)] disabled:cursor-not-allowed disabled:opacity-50",
+        "aria-invalid:border-[var(--danger-600)] aria-invalid:ring-[3px] aria-invalid:ring-[oklch(0.62_0.20_27_/_0.20)]",
+        "file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-[var(--ink-800)]",
         className,
       )}
       {...props}

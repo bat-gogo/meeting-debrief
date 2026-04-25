@@ -5,7 +5,6 @@ import { useActionState } from "react";
 
 import { signUp } from "../actions";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
@@ -15,18 +14,34 @@ export default function SignupPage() {
   const [state, formAction, pending] = useActionState<AuthState, FormData>(signUp, undefined);
 
   return (
-    <Card className="w-full max-w-sm">
-      <CardHeader>
-        <CardTitle>Create account</CardTitle>
-        <CardDescription>Start debriefing meetings in under a minute.</CardDescription>
-      </CardHeader>
-      <form action={formAction}>
-        <CardContent className="flex flex-col gap-4">
-          <div className="flex flex-col gap-2">
+    <div className="flex w-full max-w-[400px] flex-col items-center gap-6">
+      <div className="inline-flex items-center gap-2.5">
+        <span aria-hidden className="block size-[9px] rounded-full bg-[var(--accent-600)]" />
+        <span
+          className="font-display text-[20px] font-semibold tracking-[-0.01em] text-[var(--ink-900)]"
+          style={{ fontVariationSettings: '"opsz" 24' }}
+        >
+          Meeting Debrief
+        </span>
+      </div>
+
+      <div className="w-full rounded-2xl border border-[var(--border)] bg-[var(--ink-000)] p-7 shadow-sm">
+        <h1
+          className="font-display text-[1.625rem] font-medium tracking-tight text-[var(--ink-900)]"
+          style={{ fontVariationSettings: '"opsz" 36' }}
+        >
+          Create account
+        </h1>
+        <p className="mt-1.5 text-sm text-[var(--ink-500)]">
+          Start debriefing meetings in under a minute.
+        </p>
+
+        <form action={formAction} className="mt-6 flex flex-col gap-4">
+          <div className="flex flex-col gap-1.5">
             <Label htmlFor="email">Email</Label>
             <Input id="email" name="email" type="email" required autoComplete="email" />
           </div>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-1.5">
             <Label htmlFor="password">Password</Label>
             <Input
               id="password"
@@ -38,21 +53,25 @@ export default function SignupPage() {
             />
           </div>
           {state?.error ? (
-            <p className="text-destructive text-sm" role="alert">
+            <p className="text-sm text-[var(--danger-600)]" role="alert">
               {state.error}
             </p>
           ) : null}
-          <Button type="submit" className="w-full" disabled={pending}>
+          <Button type="submit" className="mt-2 w-full" disabled={pending}>
             {pending ? "Creating account..." : "Sign up"}
           </Button>
-          <p className="text-muted-foreground text-center text-sm">
-            Already have an account?{" "}
-            <Link href="/login" className="text-foreground underline">
-              Sign in
-            </Link>
-          </p>
-        </CardContent>
-      </form>
-    </Card>
+        </form>
+
+        <p className="mt-5 text-center text-xs text-[var(--ink-500)]">
+          Already have an account?{" "}
+          <Link
+            href="/login"
+            className="text-[var(--ink-800)] underline underline-offset-2 decoration-[var(--ink-300)] hover:decoration-[var(--ink-500)]"
+          >
+            Sign in
+          </Link>
+        </p>
+      </div>
+    </div>
   );
 }

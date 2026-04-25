@@ -47,20 +47,28 @@ export default async function MeetingDetailPage({ params }: PageProps) {
   const actionItems = items ?? [];
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-8">
+    <div className="mx-auto max-w-4xl px-6 py-10 md:px-8">
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0 flex-1">
-          <Link href="/meetings" className="text-muted-foreground hover:text-foreground text-sm">
+          <Link
+            href="/meetings"
+            className="text-xs text-[var(--ink-500)] transition-colors duration-150 hover:text-[var(--ink-800)]"
+          >
             ← All meetings
           </Link>
-          <h1 className="mt-2 text-3xl font-bold tracking-tight">{meeting.title}</h1>
-          <div className="mt-2 flex flex-wrap items-center gap-2">
-            <span className="text-muted-foreground text-sm">
+          <h1
+            className="mt-3 font-display text-[2.125rem] font-medium tracking-tight text-[var(--ink-900)]"
+            style={{ fontVariationSettings: '"opsz" 60' }}
+          >
+            {meeting.title}
+          </h1>
+          <div className="mt-2.5 flex flex-wrap items-center gap-2">
+            <span className="font-mono text-xs text-[var(--ink-500)]">
               {formatMeetingDate(meeting.meeting_date)}
             </span>
             {meeting.participants.map((p) => (
-              <Badge key={p} variant="secondary">
+              <Badge key={p} variant="outline">
                 {p}
               </Badge>
             ))}
@@ -72,14 +80,14 @@ export default async function MeetingDetailPage({ params }: PageProps) {
         </div>
       </div>
 
-      <div className="mt-8 flex flex-col gap-6">
+      <div className="mt-8 flex flex-col gap-4">
         {/* Summary */}
         <Card>
           <CardHeader>
             <CardTitle>Summary</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-sm leading-relaxed">{meeting.summary}</p>
+            <p className="text-sm leading-[1.6] text-[var(--ink-800)]">{meeting.summary}</p>
           </CardContent>
         </Card>
 
@@ -90,9 +98,14 @@ export default async function MeetingDetailPage({ params }: PageProps) {
               <CardTitle>Decisions</CardTitle>
             </CardHeader>
             <CardContent>
-              <ul className="flex list-inside list-disc flex-col gap-1 text-sm">
+              <ul className="flex flex-col gap-2">
                 {meeting.decisions.map((d, i) => (
-                  <li key={i}>{d}</li>
+                  <li
+                    key={i}
+                    className="relative pl-3.5 text-sm leading-[1.5] text-[var(--ink-800)] before:absolute before:left-0 before:top-[10px] before:size-1 before:rounded-full before:bg-[var(--ink-400)]"
+                  >
+                    {d}
+                  </li>
                 ))}
               </ul>
             </CardContent>
@@ -106,9 +119,14 @@ export default async function MeetingDetailPage({ params }: PageProps) {
               <CardTitle>Blockers</CardTitle>
             </CardHeader>
             <CardContent>
-              <ul className="flex list-inside list-disc flex-col gap-1 text-sm">
+              <ul className="flex flex-col gap-2">
                 {meeting.blockers.map((b, i) => (
-                  <li key={i}>{b}</li>
+                  <li
+                    key={i}
+                    className="relative pl-3.5 text-sm leading-[1.5] text-[var(--ink-800)] before:absolute before:left-0 before:top-[10px] before:size-1 before:rounded-full before:bg-[var(--ink-400)]"
+                  >
+                    {b}
+                  </li>
                 ))}
               </ul>
             </CardContent>
@@ -120,9 +138,9 @@ export default async function MeetingDetailPage({ params }: PageProps) {
           <CardHeader>
             <CardTitle>Action items</CardTitle>
           </CardHeader>
-          <CardContent className="flex flex-col gap-3">
+          <CardContent>
             {actionItems.length === 0 ? (
-              <p className="text-muted-foreground text-sm">No action items yet.</p>
+              <p className="text-sm text-[var(--ink-500)]">No action items yet.</p>
             ) : (
               <ul className="flex flex-col">
                 {actionItems.map((item) => (
@@ -141,21 +159,20 @@ export default async function MeetingDetailPage({ params }: PageProps) {
               <CardTitle>Follow-up email</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm leading-relaxed whitespace-pre-wrap">
+              <p className="text-sm leading-loose whitespace-pre-wrap text-[var(--ink-800)]">
                 {meeting.followup_email}
               </p>
             </CardContent>
           </Card>
         ) : null}
 
-        {/* Original transcript — collapsed by default (base-ui Accordion:
-            items are always collapsible; multiple=false enforces that only
-            one item can be open at a time, mirroring Radix `type="single"`). */}
+        {/* Original transcript — collapsed by default. multiple={false} mirrors
+            Radix `type="single"` for our base-ui Accordion primitive. */}
         <Accordion multiple={false}>
           <AccordionItem value="transcript">
             <AccordionTrigger>Original transcript</AccordionTrigger>
             <AccordionContent>
-              <pre className="text-muted-foreground overflow-x-auto text-xs whitespace-pre-wrap">
+              <pre className="overflow-x-auto whitespace-pre-wrap font-mono text-xs leading-[1.6] text-[var(--ink-600)]">
                 {meeting.raw_transcript}
               </pre>
             </AccordionContent>

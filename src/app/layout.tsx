@@ -1,18 +1,27 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter, JetBrains_Mono, Newsreader } from "next/font/google";
 
 import { Toaster } from "@/components/ui/sonner";
 
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const newsreader = Newsreader({
   subsets: ["latin"],
+  weight: "variable",
+  variable: "--font-newsreader",
+  axes: ["opsz"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const inter = Inter({
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-inter",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-jetbrains",
 });
 
 export const metadata: Metadata = {
@@ -26,7 +35,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
+    <html
+      lang="en"
+      className={`${newsreader.variable} ${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}
+    >
       <body className="flex min-h-full flex-col">
         {children}
         <Toaster />

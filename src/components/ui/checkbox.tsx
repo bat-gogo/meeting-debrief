@@ -10,16 +10,22 @@ function Checkbox({ className, ...props }: CheckboxPrimitive.Root.Props) {
     <CheckboxPrimitive.Root
       data-slot="checkbox"
       className={cn(
-        "peer border-input focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 aria-invalid:aria-checked:border-primary dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 data-checked:border-primary data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary relative flex size-4 shrink-0 items-center justify-center rounded-[4px] border transition-colors outline-none group-has-disabled/field:opacity-50 after:absolute after:-inset-x-3 after:-inset-y-2 focus-visible:ring-3 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:ring-3",
+        "peer relative flex size-[18px] shrink-0 items-center justify-center rounded-[5px] border-[1.5px] border-[var(--ink-300)] bg-[var(--ink-000)] transition-colors duration-150 outline-none",
+        "hover:border-[var(--ink-400)]",
+        "data-checked:border-[var(--accent-600)] data-checked:bg-[var(--accent-600)] data-checked:text-[var(--ink-000)]",
+        "focus-visible:border-[var(--accent-500)] focus-visible:ring-[3px] focus-visible:ring-[var(--accent-050)]",
+        "disabled:cursor-not-allowed disabled:opacity-50",
+        "aria-invalid:border-[var(--danger-600)] aria-invalid:ring-[3px] aria-invalid:ring-[oklch(0.62_0.20_27_/_0.20)]",
+        "after:absolute after:-inset-x-3 after:-inset-y-2",
         className,
       )}
       {...props}
     >
       <CheckboxPrimitive.Indicator
         data-slot="checkbox-indicator"
-        className="grid place-content-center text-current transition-none [&>svg]:size-3.5"
+        className="grid place-content-center text-current transition-none [&>svg]:size-[11px]"
       >
-        <CheckIcon />
+        <CheckIcon strokeWidth={3} />
       </CheckboxPrimitive.Indicator>
     </CheckboxPrimitive.Root>
   );

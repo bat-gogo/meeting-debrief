@@ -1,3 +1,4 @@
+import { FileText, Search } from "lucide-react";
 import Link from "next/link";
 
 import { EmptyState } from "@/components/empty-state";
@@ -41,9 +42,14 @@ export default async function MeetingsListPage({ searchParams }: PageProps) {
 
   if (error) {
     return (
-      <div className="mx-auto max-w-4xl px-4 py-8">
-        <h1 className="text-3xl font-bold tracking-tight">Meetings</h1>
-        <p className="text-destructive mt-4 text-sm">
+      <div className="mx-auto max-w-4xl px-6 py-10 md:px-8">
+        <h1
+          className="font-display text-[2.125rem] font-medium tracking-tight text-[var(--ink-900)]"
+          style={{ fontVariationSettings: '"opsz" 60' }}
+        >
+          Meetings
+        </h1>
+        <p className="mt-4 text-sm text-[var(--danger-600)]">
           Couldn&apos;t load meetings: {error.message}
         </p>
       </div>
@@ -53,11 +59,16 @@ export default async function MeetingsListPage({ searchParams }: PageProps) {
   const rows = meetings ?? [];
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-8">
+    <div className="mx-auto max-w-4xl px-6 py-10 md:px-8">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Meetings</h1>
-          <p className="text-muted-foreground mt-1 text-sm">Your debrief history.</p>
+          <h1
+            className="font-display text-[2.125rem] font-medium tracking-tight text-[var(--ink-900)]"
+            style={{ fontVariationSettings: '"opsz" 60' }}
+          >
+            Meetings
+          </h1>
+          <p className="mt-1.5 text-sm text-[var(--ink-500)]">Your debrief history.</p>
         </div>
         <Link href="/meetings/new" className={buttonVariants()}>
           New debrief
@@ -68,11 +79,13 @@ export default async function MeetingsListPage({ searchParams }: PageProps) {
         {rows.length === 0 ? (
           query ? (
             <EmptyState
+              icon={Search}
               title="No meetings match your search."
               subtitle={`No results for "${query}". Try different keywords.`}
             />
           ) : (
             <EmptyState
+              icon={FileText}
               title="No meetings yet"
               subtitle="Paste your first transcript to get started."
               cta={{ href: "/meetings/new", label: "New debrief" }}
@@ -84,19 +97,23 @@ export default async function MeetingsListPage({ searchParams }: PageProps) {
               <li key={m.id ?? ""}>
                 <Link
                   href={`/meetings/${m.id}`}
-                  className="hover:bg-muted/50 block rounded-xl border p-4 transition-colors"
+                  className="block rounded-xl border border-[var(--border)] bg-[var(--ink-000)] p-5 shadow-xs transition-colors duration-150 hover:bg-[var(--ink-050)]"
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div className="min-w-0 flex-1">
-                      <h2 className="font-medium">{m.title}</h2>
-                      <p className="text-muted-foreground mt-1 text-xs">
+                      <h2 className="text-[15px] font-semibold text-[var(--ink-900)]">
+                        {m.title}
+                      </h2>
+                      <p className="mt-1 font-mono text-xs text-[var(--ink-500)]">
                         {m.meeting_date ? formatMeetingDate(m.meeting_date) : ""}
                       </p>
                       {m.summary ? (
-                        <p className="mt-2 text-sm">{truncate(m.summary, 140)}</p>
+                        <p className="mt-2.5 text-sm leading-[1.5] text-[var(--ink-700)]">
+                          {truncate(m.summary, 140)}
+                        </p>
                       ) : null}
                     </div>
-                    <Badge variant={(m.open_count ?? 0) > 0 ? "default" : "secondary"}>
+                    <Badge variant={(m.open_count ?? 0) > 0 ? "secondary" : "outline"}>
                       {m.open_count ?? 0} of {m.total_count ?? 0} open
                     </Badge>
                   </div>
